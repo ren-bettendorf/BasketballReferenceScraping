@@ -2,42 +2,34 @@ import json
 import requests
 from pprint import pprint
 from bs4 import BeautifulSoup
-
-def scrapeHeader(url):
-	response = requests.get(url)
-	html = response.content
-	soup = BeautifulSoup(html, "html.parser")
-	table = soup.find('table', attrs={'id': 'per_game'})
-
-	header = [header.text for header in table.findAll('th')]
-	print(header)
-	return header
 	
 def scrapeURL(url):
 
+	# Get HTML and table to scrap from url
 	response = requests.get(url)
-
 	html = response.content
 	soup = BeautifulSoup(html, "html.parser")
 	table = soup.find('table', attrs={'id': 'per_game'})
-
-	header = [header.text for header in table.findAll('th')]
+	
+	# Sets up Header values to be used later
+	header = []
 	tableData = {}
 	for key in table.findAll('th'):
+		header.append(key.text)
 		tableData.setdefault(key.text, [])
 
-	rowC = 1
+	# Updates the lists in TableData with the correct data and removes the random non-ASCII values that are found for all-star
 	for row in table.findAll(attrs={'class':'full_table'}):
-		colC = 1
 		for i, cell in enumerate(row.findAll('td')):
-			print("Header: " + header[i] + " Adding: " + cell.text.replace("\xa0★", "") + " to ("+str(rowC)+","+str(colC)+")")
 			tableData[header[i]].append(cell.text.replace("\xa0★", ""))
-			colC += 1
-		rowC += 1
+	
+	# Creates JSON String with players firstname + lastname + stats for where JSON file location
 	json_string = json.dumps(tableData, indent=4)
 	playerFile = soup.find('div', attrs={'id': 'info_box'}).h1.text.replace(" ", "") + "Stats.json"
 	
+	# Dumps to JSON String defined above
 	with open(playerFile, "w") as outfile:
 		outfile.write(json_string)
 	
-	return playerFile
+	# Returns File Location and header values for Table
+	return [playerFile, header]

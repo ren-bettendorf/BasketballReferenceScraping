@@ -1,8 +1,8 @@
-import sys
 import json
 from pprint import pprint
-from BballRefLogic import (scrapeURL, scrapeHeader)
-from PyQt5.QtWidgets import (QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QTableWidget, QString)
+import sys
+from BballRefLogic import scrapeURL
+from PyQt5.QtWidgets import (QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QTableWidget, QTableWidgetItem)
 
 class BballRefScrapeUI(QWidget):
 	def __init__(self):
@@ -11,33 +11,43 @@ class BballRefScrapeUI(QWidget):
         
         
 	def initUI(self):
-		JSONFile = scrapeURL("http://www.basketball-reference.com/players/c/curryst01.html")
-        
-		with open(JSONFile) as dataFile:
-			tableData = json.loads(dataFile.read())
+	
+		self.setGeometry(300, 300, 800, 400)
+		self.setWindowTitle('Review')
 		
-		tableWidget = QTableWidget(len(tableData),len(tableData['0']))
-		urlEdit = QLineEdit()
-		header = scrapeHeader("http://www.basketball-reference.com/players/c/curryst01.html")
-		
-		for index in range(len(header)):
-			tableWidget.setHorizontalHeaderItem(index, QString(header[index]))
 			
 		grid = QGridLayout()
 		grid.setSpacing(10)
 
+		self.setLayout(grid) 
+		
+		JSONFile, header = scrapeURL("http://www.basketball-reference.com/players/c/curryst01.html")
+        
+		with open(JSONFile) as dataFile:
+			tableData = json.loads(dataFile.read())
+		
+		tableWidget = QTableWidget(len(tableData[header[0]]),len(header))
+		urlEdit = QLineEdit()
+		
+		for col, key in enumerate(tableData.keys()):
+			for row, item in enumerate(tableData[key]):
+				newItem = QTableWidgetItem(item)
+				tableWidget.setItem(row, col, newItem)
+				
+		tableWidget.setHorizontalHeaderLabels(header)
+		tableWidget.resizeColumnsToContents()
+		tableWidget.resizeRowsToContents()
+		
 		grid.addWidget(urlEdit, 1, 0)
 
 		grid.addWidget(tableWidget, 2, 0)
         
-		self.setLayout(grid) 
-        
-		self.setGeometry(300, 300, 800, 400)
-		self.setWindowTitle('Review')    
 		self.show()
 	
-if __name__ == '__main__':
-    
+def main():
     app = QApplication(sys.argv)
     ex = BballRefScrapeUI()
-    sys.exit(app.exec_())
+    app.exec_()
+	
+if __name__ == '__main__':
+    main()
