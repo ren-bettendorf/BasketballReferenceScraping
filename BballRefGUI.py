@@ -2,7 +2,7 @@ import json
 from pprint import pprint
 import sys
 from BballRefLogic import scrapeURL
-from PyQt5.QtWidgets import (QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QTableWidget, QTableWidgetItem)
+from PyQt5.QtWidgets import (QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QTableWidget, QTableWidgetItem, QHeaderView)
 
 class BballRefScrapeUI(QWidget):
 	def __init__(self):
@@ -12,24 +12,22 @@ class BballRefScrapeUI(QWidget):
         
 	def initUI(self):
 	
-		self.setGeometry(300, 300, 800, 400)
-		self.setWindowTitle('Review')
+		self.setWindowTitle('Player Stats')
 		
-			
 		grid = QGridLayout()
 		grid.setSpacing(10)
 
 		self.setLayout(grid) 
 		
 		JSONFile, header, playerName = scrapeURL("http://www.basketball-reference.com/players/c/curryst01.html")
-        
-		with open(JSONFile) as dataFile:
-			tableData = json.loads(dataFile.read())
 		
-		tableWidget = QTableWidget(len(tableData[header[0]]),len(header))
+		tableData = json.loads(JSONFile)
+		tableWidget = QTableWidget(len(tableData[header[1]]),len(header))
 		urlEdit = QLineEdit()
 		playerNameLabel = QLabel("Current Player Stats: " + playerName)
-		for col, key in enumerate(tableData.keys()):
+		
+		# Create Table from tableData keys, values
+		for col, key in enumerate(header):
 			for row, item in enumerate(tableData[key]):
 				newItem = QTableWidgetItem(item)
 				tableWidget.setItem(row, col, newItem)
@@ -38,6 +36,11 @@ class BballRefScrapeUI(QWidget):
 		tableWidget.resizeColumnsToContents()
 		tableWidget.resizeRowsToContents()
 		
+		horizontalHeader = tableWidget.horizontalHeader()
+		horizontalHeader.
+		verticalHeader = tableWidget.verticalHeader()
+		
+		self.setGeometry(300,300,len(horizontalHeader)*32 + 60, len(verticalHeader)*32 + 40)
 		grid.addWidget(urlEdit, 0, 0)
 		grid.addWidget(playerNameLabel, 1, 0)
 		grid.addWidget(tableWidget, 2, 0)
