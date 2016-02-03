@@ -28,7 +28,7 @@ class BballRefScrapeUI(QWidget):
 		
 		tableWidget = QTableWidget(len(tableData[header[0]]),len(header))
 		urlEdit = QLineEdit()
-		playerNameLabel = QLabel(playerName)
+		playerNameLabel = QLabel("Current Player Stats: " + playerName)
 		for col, key in enumerate(tableData.keys()):
 			for row, item in enumerate(tableData[key]):
 				newItem = QTableWidgetItem(item)
