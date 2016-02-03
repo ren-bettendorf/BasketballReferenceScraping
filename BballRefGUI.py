@@ -37,10 +37,9 @@ class BballRefScrapeUI(QWidget):
 		tableWidget.resizeRowsToContents()
 		
 		horizontalHeader = tableWidget.horizontalHeader()
-		horizontalHeader.
 		verticalHeader = tableWidget.verticalHeader()
 		
-		self.setGeometry(300,300,len(horizontalHeader)*32 + 60, len(verticalHeader)*32 + 40)
+		self.setGeometry(300,300,len(horizontalHeader)*32 + 55, len(verticalHeader)*32 + 40)
 		grid.addWidget(urlEdit, 0, 0)
 		grid.addWidget(playerNameLabel, 1, 0)
 		grid.addWidget(tableWidget, 2, 0)
