@@ -25,11 +25,12 @@ def scrapeURL(url):
 	
 	# Creates JSON String with players firstname + lastname + stats for where JSON file location
 	json_string = json.dumps(tableData, indent=4)
-	playerFile = soup.find('div', attrs={'id': 'info_box'}).h1.text.replace(" ", "") + "Stats.json"
+	playerName = soup.find('div', attrs={'id': 'info_box'}).h1.text
+	playerFile = playerName.replace(" ", "") + "Stats.json"
 	
 	# Dumps to JSON String defined above
 	with open(playerFile, "w") as outfile:
 		outfile.write(json_string)
 	
 	# Returns File Location and header values for Table
-	return [playerFile, header]
+	return [playerFile, header, playerName]

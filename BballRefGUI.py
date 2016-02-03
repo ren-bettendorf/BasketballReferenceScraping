@@ -21,14 +21,14 @@ class BballRefScrapeUI(QWidget):
 
 		self.setLayout(grid) 
 		
-		JSONFile, header = scrapeURL("http://www.basketball-reference.com/players/c/curryst01.html")
+		JSONFile, header, playerName = scrapeURL("http://www.basketball-reference.com/players/c/curryst01.html")
         
 		with open(JSONFile) as dataFile:
 			tableData = json.loads(dataFile.read())
 		
 		tableWidget = QTableWidget(len(tableData[header[0]]),len(header))
 		urlEdit = QLineEdit()
-		
+		playerNameLabel = QLabel(playerName)
 		for col, key in enumerate(tableData.keys()):
 			for row, item in enumerate(tableData[key]):
 				newItem = QTableWidgetItem(item)
@@ -38,8 +38,8 @@ class BballRefScrapeUI(QWidget):
 		tableWidget.resizeColumnsToContents()
 		tableWidget.resizeRowsToContents()
 		
-		grid.addWidget(urlEdit, 1, 0)
-
+		grid.addWidget(urlEdit, 0, 0)
+		grid.addWidget(playerNameLabel, 1, 0)
 		grid.addWidget(tableWidget, 2, 0)
         
 		self.show()
