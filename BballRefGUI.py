@@ -19,7 +19,7 @@ class BballRefScrapeUI(QWidget):
 
 		self.setLayout(grid) 
 		
-		JSONFile, header, playerName = scrapeURL("http://www.basketball-reference.com/players/b/bryanko01.html")
+		JSONFile, header, playerName = scrapeURL("http://www.basketball-reference.com/players/c/curryst01.html")
 		
 		tableData = json.loads(JSONFile)
 		tableWidget = QTableWidget(len(tableData[header[1]]),len(header))
@@ -37,9 +37,11 @@ class BballRefScrapeUI(QWidget):
 		tableWidget.resizeRowsToContents()
 		
 		horizontalHeader = tableWidget.horizontalHeader()
+		horizontalHeader.setStretchLastSection(True)
 		verticalHeader = tableWidget.verticalHeader()
+		verticalHeader.setStretchLastSection(True)
 		
-		self.setGeometry(300,300,len(horizontalHeader)*32 + 55, len(verticalHeader)*25 + 100)
+		self.setGeometry(300,300,len(horizontalHeader)*32 + 46, len(verticalHeader)*25 + 88)
 		grid.addWidget(urlEdit, 0, 0)
 		grid.addWidget(playerNameLabel, 1, 0)
 		grid.addWidget(tableWidget, 2, 0)
